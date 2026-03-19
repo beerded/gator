@@ -13,15 +13,6 @@ type Config struct {
 	CurrentUserName  string		`json:"current_user_name"`
 }
 
-func getConfigFilePath() (string, error) {
-	path, err := os.UserHomeDir()
-	if err != nil {
-		return "", fmt.Errorf("%w",err)
-	}
-	configFilePath := path + "/" + configFileName
-	return configFilePath, nil
-}
-
 func Read() (*Config, error) {
 	configFilePath, err := getConfigFilePath()
 	if err != nil {
@@ -61,6 +52,15 @@ func (cfg *Config) Print() error {
 	fmt.Printf("    db_url: %s\n", cfg.DBUrl)
 	fmt.Printf("    current_user_name: %s\n", cfg.CurrentUserName)
 	return nil
+}
+
+func getConfigFilePath() (string, error) {
+	path, err := os.UserHomeDir()
+	if err != nil {
+		return "", fmt.Errorf("%w",err)
+	}
+	configFilePath := path + "/" + configFileName
+	return configFilePath, nil
 }
 
 func write(cfg *Config) error {
