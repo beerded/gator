@@ -2,6 +2,10 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"context"
+
+	"github.com/google/uuid"
 )
 
 func handlerLogin(s *state, cmd command) error {
@@ -10,7 +14,13 @@ func handlerLogin(s *state, cmd command) error {
 	}
 	username := cmd.args[0]
 
-	err := s.cfg.SetUser(username)
+	ctx := context.Background()
+	user, err := s.db.GetUser(ctx, username)
+	if user.ID == uuid.Nil {
+		log.Fatalf("User '%s' not found in database. Unable to login. Exiting\n", username)
+	}
+
+	err = s.cfg.SetUser(username)
 	if err != nil {
 		return err
 	}

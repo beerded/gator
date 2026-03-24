@@ -1,11 +1,14 @@
 package main
 
+import _ "github.com/lib/pq"
 import (
+	"database/sql"
 	"fmt"
 	"log"
 	"os"
 
 	"github.com/beerded/gator/internal/config"
+	"github.com/beerded/gator/internal/database"
 )
 
 func main() {
@@ -22,12 +25,17 @@ func main() {
 	}
 
 	// cfg.Print()
-	s := state{cfg: cfg}
+	db, err := sql.Open("postgres", cfg.DBUrl)
+
+	dbQueries := database.New(db)
+
+	s := state{cfg: cfg, db: dbQueries}
 
 	cmds := newCommands()
 
  	args := os.Args[1:]
 	cmds.register("login", handlerLogin)
+	cmds.register("register", handlerRegister)
 
 	commandStruct := command{name: args[0], args: args[1:]}
 
