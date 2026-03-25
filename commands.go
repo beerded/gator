@@ -46,6 +46,6 @@ func (c *commands) run(s *state, cmd command) error {
 }
 
 func (c *commands) register(name string, f func(*state, command) error) {
-	fmt.Printf("Registering command '%s'\n", name)
+	//fmt.Printf("Registering command '%s'\n", name)
 	c.registeredCommands[name] = f
 }
