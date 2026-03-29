@@ -13,3 +13,8 @@ RETURNING *;
 -- name: DeleteAllFeeds :exec
 DELETE FROM feeds;
 
+-- name: GetFeeds :many
+SELECT feeds.name, feeds.url, users.name AS addedBy
+FROM feeds
+INNER JOIN users
+ON feeds.user_id = users.id;

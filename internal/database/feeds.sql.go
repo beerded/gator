@@ -63,3 +63,39 @@ func (q *Queries) DeleteAllFeeds(ctx context.Context) error {
 	_, err := q.db.ExecContext(ctx, deleteAllFeeds)
 	return err
 }
+
+const getFeeds = `-- name: GetFeeds :many
+SELECT feeds.name, feeds.url, users.name AS addedBy
+FROM feeds
+INNER JOIN users
+ON feeds.user_id = users.id
+`
+
+type GetFeedsRow struct {
+	Name    string
+	Url     string
+	Addedby string
+}
+
+func (q *Queries) GetFeeds(ctx context.Context) ([]GetFeedsRow, error) {
+	rows, err := q.db.QueryContext(ctx, getFeeds)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetFeedsRow
+	for rows.Next() {
+		var i GetFeedsRow
+		if err := rows.Scan(&i.Name, &i.Url, &i.Addedby); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}

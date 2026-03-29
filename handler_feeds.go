@@ -37,3 +37,24 @@ func handlerAddFeed(s *state, cmd command) error {
 	fmt.Printf("Feed:\n%+v\n", feed)
 	return nil
 }
+
+func handlerListFeeds(s *state, cmd command) error {
+	data, err := s.db.GetFeeds(context.Background())
+	if err != nil {
+		return fmt.Errorf("Error listing feeds: %w", err)
+	}
+
+	fmt.Println("FEEDS:")
+	for _, row := range data {
+		printFeed(row.Name, row.Url, row.Addedby)
+	}
+	return nil
+}
+
+func printFeed(name, url, addedBy string) {
+	fmt.Printf("Feed Name:			%s\n", name)
+	fmt.Printf("Feed URL:			%s\n", url)
+	fmt.Printf("Added By:			%s\n", addedBy)
+	fmt.Println("===========================================")
+}
+
