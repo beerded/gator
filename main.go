@@ -41,6 +41,8 @@ func main() {
 	cmds.register("agg", handlerAgg)
 	cmds.register("addfeed", handlerAddFeed)
 	cmds.register("feeds", handlerListFeeds)
+	cmds.register("follow", handlerCreateFeedFollow)
+  	cmds.register("following", handlerGetFeedFollowsForUser)
 
 	commandStruct := command{name: args[0], args: args[1:]}
 

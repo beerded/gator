@@ -33,6 +33,19 @@ func handlerAddFeed(s *state, cmd command) error {
 	if err != nil {
 		return fmt.Errorf("Unable to create feed: %w", err)
 	}
+	// Follow the feed
+	followParams := database.CreateFeedFollowParams{
+		ID:			uuid.New(),
+		CreatedAt:	time.Now(),
+		UpdatedAt:	time.Now(),
+		UserID:		user.ID,
+		FeedID:		feed.ID,
+	}
+
+	_, err = s.db.CreateFeedFollow(context.Background(), followParams)
+	if err != nil {
+		return fmt.Errorf("Unable to follow own feed: %w", err)
+	}
 
 	fmt.Printf("Feed:\n%+v\n", feed)
 	return nil
