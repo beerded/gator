@@ -50,18 +50,18 @@ func handlerGetFeedFollowsForUser(s *state, cmd command) error {
 	}
 	fmt.Printf("Feed follows for '%s':\n", user)
 	for _, feedFollow := range feedFollowsForUser {
-		fmt.Printf("%s\n", feedFollow.FeedName)
+		fmt.Printf("	%s\n", feedFollow.FeedName)
 	}
 	return nil
 }
 
 func printFeedFollow(feedFollow database.CreateFeedFollowRow) {
-	fmt.Printf("ID:			%v\n", feedFollow.ID)
-	fmt.Printf("Created At:	%v\n", feedFollow.CreatedAt)
-	fmt.Printf("Updated At:	%v\n", feedFollow.UpdatedAt)
-	fmt.Printf("UserID:		%v\n", feedFollow.UserID)
-	fmt.Printf("User Name:	%v\n", feedFollow.UserName)
-	fmt.Printf("FeedID:		%v\n", feedFollow.FeedID)
-	fmt.Printf("Feed Name:	%v\n", feedFollow.FeedName)
+	fmt.Printf("	ID:		%v\n", feedFollow.ID)
+	fmt.Printf("	Created At:	%v\n", feedFollow.CreatedAt)
+	fmt.Printf("	Updated At:	%v\n", feedFollow.UpdatedAt)
+	fmt.Printf("	UserID:		%v\n", feedFollow.UserID)
+	fmt.Printf("	User Name:	%v\n", feedFollow.UserName)
+	fmt.Printf("	FeedID:		%v\n", feedFollow.FeedID)
+	fmt.Printf("	Feed Name:	%v\n", feedFollow.FeedName)
 	fmt.Printf("==============================================\n")
 }

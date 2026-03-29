@@ -47,7 +47,14 @@ func handlerAddFeed(s *state, cmd command) error {
 		return fmt.Errorf("Unable to follow own feed: %w", err)
 	}
 
-	fmt.Printf("Feed:\n%+v\n", feed)
+	fmt.Println("Feed:")
+	fmt.Printf("	ID: 			%v\n", feed.ID)
+	fmt.Printf("	CreatedAt:		%v\n", feed.CreatedAt)
+	fmt.Printf("	UpdatedAt:		%v\n", feed.UpdatedAt)
+	fmt.Printf("	Name:			%v\n", feed.Name)
+	fmt.Printf("	URL:			%v\n", feed.Url)
+	fmt.Printf("	UserID:			%v\n", feed.UserID)
+	fmt.Println("=====================================================")
 	return nil
 }
 
@@ -65,9 +72,9 @@ func handlerListFeeds(s *state, cmd command) error {
 }
 
 func printFeed(name, url, addedBy string) {
-	fmt.Printf("Feed Name:			%s\n", name)
-	fmt.Printf("Feed URL:			%s\n", url)
-	fmt.Printf("Added By:			%s\n", addedBy)
-	fmt.Println("===========================================")
+	fmt.Printf("	Feed Name:			%v\n", name)
+	fmt.Printf("	Feed URL:			%v\n", url)
+	fmt.Printf("	Added By:			%v\n", addedBy)
+	fmt.Println("====================================================")
 }
 
