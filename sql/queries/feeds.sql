@@ -10,8 +10,10 @@ VALUES (
 )
 RETURNING *;
 
+
 -- name: DeleteAllFeeds :exec
 DELETE FROM feeds;
+
 
 -- name: GetFeeds :many
 SELECT feeds.name, feeds.url, users.name AS addedBy
@@ -19,6 +21,19 @@ FROM feeds
 INNER JOIN users
 ON feeds.user_id = users.id;
 
+
 -- name: GetFeed :one
 SELECT * FROM feeds
     WHERE feeds.url = $1;
+
+
+-- name: MarkFeedFetched :one
+UPDATE feeds SET last_fetched_at = $2, updated_at = $2
+    WHERE id = $1
+    RETURNING *;
+
+
+-- name: GetNextFeedToFetch :one
+SELECT * FROM feeds
+    ORDER BY updated_at ASC NULLS FIRST
+    LIMIT 1;
