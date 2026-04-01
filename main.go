@@ -2,6 +2,7 @@ package main
 
 import _ "github.com/lib/pq"
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"log"
@@ -39,10 +40,10 @@ func main() {
 	cmds.register("reset", handlerReset)
 	cmds.register("users", handlerUsers)
 	cmds.register("agg", handlerAgg)
-	cmds.register("addfeed", handlerAddFeed)
+	cmds.register("addfeed", middlewareLoggedIn(handlerAddFeed))
 	cmds.register("feeds", handlerListFeeds)
-	cmds.register("follow", handlerCreateFeedFollow)
-  	cmds.register("following", handlerGetFeedFollowsForUser)
+	cmds.register("follow", middlewareLoggedIn(handlerCreateFeedFollow))
+  	cmds.register("following", middlewareLoggedIn(handlerGetFeedFollowsForUser))
 
 	commandStruct := command{name: args[0], args: args[1:]}
 
@@ -51,4 +52,14 @@ func main() {
 		log.Fatalf("Error running command '%s': %v", args[0], err)
 	}
 	// cfg.Print()
+}
+
+func middlewareLoggedIn(handler func(s *state, cmd command, user database.User) error) func(*state, command) error {
+	return func(s *state, cmd command) error {
+		user, err := s.db.GetUser(context.Background(), s.cfg.CurrentUserName)
+		if err != nil {
+			return fmt.Errorf("Error getting user: %w", err)
+		}
+		return handler(s, cmd, user)
+	}
 }

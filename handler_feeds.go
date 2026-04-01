@@ -9,17 +9,12 @@ import (
 	"github.com/beerded/gator/internal/database"
 )
 
-func handlerAddFeed(s *state, cmd command) error {
+func handlerAddFeed(s *state, cmd command, user database.User) error {
 	if len(cmd.args) < 2 {
 		return fmt.Errorf("addfeed requires name and url as arguments")
 	}
 	name := cmd.args[0]
 	url := cmd.args[1]
-	currentUser := s.cfg.CurrentUserName
-	user, err := s.db.GetUser(context.Background(), currentUser)
-	if err != nil {
-		return fmt.Errorf("Unable to get info for user: %w", err)
-	}
 
 	params := database.CreateFeedParams{
 		ID:			uuid.New(),

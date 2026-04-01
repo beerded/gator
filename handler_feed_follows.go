@@ -9,7 +9,7 @@ import (
 	"github.com/beerded/gator/internal/database"
 )
 
-func handlerCreateFeedFollow(s *state, cmd command) error {
+func handlerCreateFeedFollow(s *state, cmd command, user database.User) error {
 	if len(cmd.args) == 0 {
 		return fmt.Errorf("URL is required to follow feed")
 	}
@@ -18,10 +18,6 @@ func handlerCreateFeedFollow(s *state, cmd command) error {
 	feed, err := s.db.GetFeed(context.Background(), url)
 	if err != nil {
 		return fmt.Errorf("Error looking up feed: %w", err)
-	}
-	user, err := s.db.GetUser(context.Background(), s.cfg.CurrentUserName)
-	if err != nil {
-		return fmt.Errorf("Error getting user: %w", err)
 	}
 
 	params := database.CreateFeedFollowParams{
@@ -41,12 +37,7 @@ func handlerCreateFeedFollow(s *state, cmd command) error {
 	return nil
 }
 
-func handlerGetFeedFollowsForUser(s *state, cmd command) error {
-	user, err := s.db.GetUser(context.Background(), s.cfg.CurrentUserName)
-	if err != nil {
-		return fmt.Errorf("Error Getting User: %w", err)
-	}
-
+func handlerGetFeedFollowsForUser(s *state, cmd command, user database.User) error {
 	feedFollowsForUser, err := s.db.GetFeedFollowsForUser(context.Background(), user.ID)
 	if err != nil {
 		return fmt.Errorf("Error Getting Feed Follows for user '%s': %w", user, err)
