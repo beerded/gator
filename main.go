@@ -44,6 +44,7 @@ func main() {
 	cmds.register("feeds", handlerListFeeds)
 	cmds.register("follow", middlewareLoggedIn(handlerCreateFeedFollow))
   	cmds.register("following", middlewareLoggedIn(handlerGetFeedFollowsForUser))
+	cmds.register("unfollow", middlewareLoggedIn(handlerUnfollow))
 
 	commandStruct := command{name: args[0], args: args[1:]}
 
