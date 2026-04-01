@@ -19,12 +19,6 @@ func handlerRegister(s *state, cmd command) error {
 	username := cmd.args[0]
 	uid := uuid.New()
 	currentTime := time.Now()
-	args := database.CreateUserParams{
-		ID: 		uid,
-		CreatedAt:	currentTime,
-		UpdatedAt:	currentTime,
-		Name:		username,
-	}
 
 	ctx := context.Background()
 	user, err := s.db.GetUser(ctx, username)
@@ -33,7 +27,12 @@ func handlerRegister(s *state, cmd command) error {
   		log.Fatal("User with that name already exists. Exiting")
 	}
 
-	user, err = s.db.CreateUser(context.Background(), args)
+	user, err = s.db.CreateUser(ctx, database.CreateUserParams{
+		ID: 		uid,
+		CreatedAt:	currentTime,
+		UpdatedAt:	currentTime,
+		Name:		username,
+	})
 	if err != nil {
 		return err
 	}

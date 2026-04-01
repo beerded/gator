@@ -13,12 +13,11 @@ import (
 
 func handlerAgg(s *state, cmd command) error {
 	if len(cmd.args) != 1 {
-		return fmt.Errorf("Usage: agg <time_between_reqs>\n")
+		return fmt.Errorf("Usage: %v <time_between_reqs>", cmd.name)
 	}
-	timeStr := cmd.args[0]
-	duration, err := time.ParseDuration(timeStr)
+	duration, err := time.ParseDuration(cmd.args[0])
 	if err != nil {
-		return fmt.Errorf("Error setting parse duration: %w\n", err)
+		return fmt.Errorf("Invalid parse duration: %w\n", err)
 	}
 	fmt.Printf("Collecting feeds every %s\n", duration)
 
@@ -37,11 +36,10 @@ func scrapeFeeds(s *state) error {
 		return fmt.Errorf("Unable to fetch next feed: %w", err)
 	}
 
-	params := database.MarkFeedFetchedParams{
-		ID: 			nextFeed.ID,
-		LastFetchedAt:	sql.NullTime{Time: time.Now(), Valid: true,},
-	}
-	feed, err := s.db.MarkFeedFetched(ctx, params)
+	feed, err := s.db.MarkFeedFetched(ctx, database.MarkFeedFetchedParams{
+		ID:				nextFeed.ID,
+		LastFetchedAt: 	sql.NullTime{Time: time.Now(), Valid: true,},
+	})
 	if err != nil {
 		return fmt.Errorf("Error Marking feed as fetched: %w", err)
 	}
@@ -54,5 +52,7 @@ func scrapeFeeds(s *state) error {
 	for _, item := range rssFeed.Channel.Item {
 		fmt.Printf("* '%s'\n", item.Title)
 	}
+
+	fmt.Printf("Collected %v posts from feed '%v'\n", len(rssFeed.Channel.Item), feed.Name)
 	return nil
 }

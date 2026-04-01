@@ -20,14 +20,13 @@ func handlerCreateFeedFollow(s *state, cmd command, user database.User) error {
 		return fmt.Errorf("Error looking up feed: %w", err)
 	}
 
-	params := database.CreateFeedFollowParams{
+	feedFollow, err := s.db.CreateFeedFollow(context.Background(), database.CreateFeedFollowParams{
 		ID:			uuid.New(),
 		CreatedAt:	time.Now(),
 		UpdatedAt:	time.Now(),
 		UserID: 	user.ID,
 		FeedID:		feed.ID,
-	}
-	feedFollow, err := s.db.CreateFeedFollow(context.Background(), params)
+	})
 	if err != nil {
 		return fmt.Errorf("Error Creating Feed Follow: %w", err)
 	}
@@ -60,12 +59,10 @@ func handlerUnfollow(s *state, cmd command, user database.User) error {
 		return err
 	}
 
-	params := database.DeleteFeedFollowForUserParams{
+	err = s.db.DeleteFeedFollowForUser(context.Background(), database.DeleteFeedFollowForUserParams{
 		UserID: user.ID,
 		FeedID: feed.ID,
-	}
-
-	err = s.db.DeleteFeedFollowForUser(context.Background(), params)
+	})
 	if err != nil {
 		return err
 	}
