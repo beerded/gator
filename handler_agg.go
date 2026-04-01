@@ -4,8 +4,10 @@ import (
 	"context"
 	"fmt"
 	"database/sql"
+	"strings"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/beerded/gator/internal/database"
 )
 
@@ -50,7 +52,32 @@ func scrapeFeeds(s *state) error {
 	}
 
 	for _, item := range rssFeed.Channel.Item {
-		fmt.Printf("* '%s'\n", item.Title)
+		publishedAt := sql.NullTime{}
+		if t, err := time.Parse(time.RFC1123Z, item.PubDate); err == nil {
+			publishedAt = sql.NullTime{
+				Time:	t,
+				Valid: 	true,
+			}
+		} else {
+			fmt.Printf("Couldn't parse timestamp %v so just publishing as NULL\n", item.PubDate)
+		}
+
+		_, err = s.db.CreatePost(ctx, database.CreatePostParams{
+			ID:				uuid.New(),
+			CreatedAt:		time.Now(),
+			UpdatedAt:		time.Now(),
+			Title:			item.Title,
+			Url:			item.Link,
+			Description:	item.Description,
+			PublishedAt:	publishedAt,
+			FeedID:			feed.ID,
+		})
+		if err != nil {
+			if strings.Contains(err.Error(), "duplicate key") {
+				continue
+			}
+			return fmt.Errorf("Error saving post: %w", err)
+		}
 	}
 
 	fmt.Printf("Collected %v posts from feed '%v'\n", len(rssFeed.Channel.Item), feed.Name)
