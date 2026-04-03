@@ -42,7 +42,9 @@ func (c *commands) run(s *state, cmd command) error {
 	}
 	commando, ok := c.registeredCommands[cmd.name]
 	if !ok {
-		return fmt.Errorf("Could not find command '%s'", cmd.name)
+		fmt.Printf("Could not find command '%s'\n", cmd.name)
+		c.registeredCommands["help"].callback(s, cmd)
+		return errors.New("")
 	}
 	callback := commando.callback
 	err := callback(s, cmd)
