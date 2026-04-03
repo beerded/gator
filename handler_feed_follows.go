@@ -9,6 +9,8 @@ import (
 	"github.com/beerded/gator/internal/database"
 )
 
+const helpFollow string = "Start following the feed at the specified URL if it has already been added"
+
 func handlerCreateFeedFollow(s *state, cmd command, user database.User) error {
 	if len(cmd.args) == 0 {
 		return fmt.Errorf("URL is required to follow feed")
@@ -36,6 +38,8 @@ func handlerCreateFeedFollow(s *state, cmd command, user database.User) error {
 	return nil
 }
 
+const helpFollowing string = "List feeds that current user follows"
+
 func handlerGetFeedFollowsForUser(s *state, cmd command, user database.User) error {
 	feedFollowsForUser, err := s.db.GetFeedFollowsForUser(context.Background(), user.ID)
 	if err != nil {
@@ -47,6 +51,8 @@ func handlerGetFeedFollowsForUser(s *state, cmd command, user database.User) err
 	}
 	return nil
 }
+
+const helpUnfollow string = "Stop following the feed at the specified URL"
 
 func handlerUnfollow(s *state, cmd command, user database.User) error {
 	if len(cmd.args) == 0 {

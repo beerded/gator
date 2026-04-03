@@ -58,6 +58,11 @@ It should contain the following:
 
 ## USAGE:
 
+Show all the available commands:
+```bash
+gator help
+```
+
 Create a new user:
 ```bash
 gator register <user>

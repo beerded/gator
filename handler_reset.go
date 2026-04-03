@@ -5,6 +5,8 @@ import (
 	"fmt"
 )
 
+const helpReset string = "Reset the system (empty the database)"
+
 func handlerReset(s *state, cmd command) error {
 	err := s.db.DeleteAllUsers(context.Background())
 	if err != nil {

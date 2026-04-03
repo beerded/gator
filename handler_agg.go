@@ -13,6 +13,8 @@ import (
 
 // const testUrl = "https://www.wagslane.dev/index.xml"
 
+const helpAgg string = "Start pulling posts from registered feeds at the specified time interval"
+
 func handlerAgg(s *state, cmd command) error {
 	if len(cmd.args) != 1 {
 		return fmt.Errorf("Usage: %v <time_between_reqs>", cmd.name)

@@ -30,23 +30,24 @@ func main() {
 
 	dbQueries := database.New(db)
 
-	s := state{cfg: cfg, db: dbQueries}
 
 	cmds := newCommands()
 
  	args := os.Args[1:]
-	cmds.register("login", handlerLogin)
-	cmds.register("register", handlerRegister)
-	cmds.register("reset", handlerReset)
-	cmds.register("users", handlerUsers)
-	cmds.register("agg", handlerAgg)
-	cmds.register("addfeed", middlewareLoggedIn(handlerAddFeed))
-	cmds.register("feeds", handlerListFeeds)
-	cmds.register("follow", middlewareLoggedIn(handlerCreateFeedFollow))
-  	cmds.register("following", middlewareLoggedIn(handlerGetFeedFollowsForUser))
-	cmds.register("unfollow", middlewareLoggedIn(handlerUnfollow))
-	cmds.register("browse", middlewareLoggedIn(handlerBrowse))
+	cmds.register("login", handlerLogin, helpLogin)
+	cmds.register("register", handlerRegister, helpRegister)
+	cmds.register("reset", handlerReset, helpReset)
+	cmds.register("users", handlerUsers, helpUsers)
+	cmds.register("agg", handlerAgg, helpAgg)
+	cmds.register("addfeed", middlewareLoggedIn(handlerAddFeed), helpAddFeed)
+	cmds.register("feeds", handlerListFeeds, helpFeeds)
+	cmds.register("follow", middlewareLoggedIn(handlerCreateFeedFollow), helpFollow)
+  	cmds.register("following", middlewareLoggedIn(handlerGetFeedFollowsForUser), helpFollowing)
+	cmds.register("unfollow", middlewareLoggedIn(handlerUnfollow), helpUnfollow)
+	cmds.register("browse", middlewareLoggedIn(handlerBrowse), helpBrowse)
+	cmds.register("help", handlerHelp, helpHelp)
 
+	s := state{cfg: cfg, db: dbQueries, cmds: cmds}
 	commandStruct := command{name: args[0], args: args[1:]}
 
 	err = cmds.run(&s, commandStruct)

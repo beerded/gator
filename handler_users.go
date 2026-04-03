@@ -5,6 +5,8 @@ import (
 	"fmt"
 )
 
+const helpUsers string = "List the available users"
+
 func handlerUsers(s *state, cmd command) error {
 
 	ctx := context.Background()

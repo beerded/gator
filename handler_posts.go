@@ -8,6 +8,8 @@ import (
 	"github.com/beerded/gator/internal/database"
 )
 
+const helpBrowse string = "Print N posts from followed feeds. N defaults to 2"
+
 func handlerBrowse(s *state, cmd command, user database.User) error {
 	limit := int32(2)
 	if len(cmd.args) > 0 {

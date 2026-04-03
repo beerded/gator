@@ -9,6 +9,8 @@ import (
 	"github.com/beerded/gator/internal/database"
 )
 
+const helpAddFeed string = "Add feed to database and automatically follow this feed"
+
 func handlerAddFeed(s *state, cmd command, user database.User) error {
 	if len(cmd.args) < 2 {
 		return fmt.Errorf("addfeed requires name and url as arguments")
@@ -51,6 +53,8 @@ func handlerAddFeed(s *state, cmd command, user database.User) error {
 	fmt.Println("=====================================================")
 	return nil
 }
+
+const helpFeeds string = "List feeds that have been added to the database"
 
 func handlerListFeeds(s *state, cmd command) error {
 	data, err := s.db.GetFeeds(context.Background())

@@ -8,6 +8,8 @@ import (
 	"github.com/google/uuid"
 )
 
+const helpLogin string = "Login as a different user (must have been previously added)"
+
 func handlerLogin(s *state, cmd command) error {
 	if len(cmd.args) == 0 {
 		return fmt.Errorf("Username is required for login command")
